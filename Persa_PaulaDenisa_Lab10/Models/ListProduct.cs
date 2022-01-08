@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 using SQLite;
+using SQLiteNetExtensions.Attributes;
 
 namespace Persa_PaulaDenisa_Lab10.Models
 {
-    public class ShopList
+    public class ListProduct
     {
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
-        public string Description { get; set; }
-        public DateTime Date { get; set; }
-
+        [ForeignKey(typeof(ShopList))]
+        public int ShopListID { get; set; }
+        public int ProductID { get; set; }
     }
 }

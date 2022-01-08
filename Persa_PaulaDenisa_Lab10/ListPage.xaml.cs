@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Persa_PaulaDenisa_Lab10.Models;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Persa_PaulaDenisa_Lab10.Models;
+using Persa_PaulaDenisa_Lab10.Data;
 
 namespace Persa_PaulaDenisa_Lab10
 {
@@ -28,6 +30,42 @@ namespace Persa_PaulaDenisa_Lab10
             var slist = (ShopList)BindingContext;
             await App.Database.DeleteShopListAsync(slist);
             await Navigation.PopAsync();
+        }
+
+        async void OnChooseButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ProductPage((ShopList)
+           this.BindingContext)
+            {
+                BindingContext = new Product()
+            });
+
+        }
+        async void OnListViewItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+
+            Product p;
+            if (e.SelectedItem != null)
+            {
+                p = e.SelectedItem as Product;
+                var lp = new ListProduct()
+                {
+                    ShopListID = sl.ID,
+                    ProductID = p.ID
+                };
+                await App.Database.SaveListProductAsync(lp);
+                p.ListProducts = new List<ListProduct> { lp };
+
+                await Navigation.PopAsync();
+            }
+
+        }
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            var shopl = (ShopList)BindingContext;
+
+            listView.ItemsSource = await App.Database.GetListProductsAsync(shopl.ID);
         }
     }
 }

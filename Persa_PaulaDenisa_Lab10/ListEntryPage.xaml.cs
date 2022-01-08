@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Persa_PaulaDenisa_Lab10.Models;
 
 namespace Persa_PaulaDenisa_Lab10
 {
@@ -16,27 +17,27 @@ namespace Persa_PaulaDenisa_Lab10
         {
             InitializeComponent();
         }
-    }
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-        listView.ItemsSource = await App.Database.GetShopListsAsync();
-    }
-    async void OnShopListAddedClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new ListPage
+        protected override async void OnAppearing()
         {
-            BindingContext = new ShopList()
-        });
-    }
-    async void OnListViewItemSelected(object sender, SelectedItemChangedEventArgs e)
-    {
-        if (e.SelectedItem != null)
+            base.OnAppearing();
+            listView.ItemsSource = await App.Database.GetShopListsAsync();
+        }
+        async void OnShopListAddedClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new ListPage
             {
-                BindingContext = e.SelectedItem as ShopList
+                BindingContext = new ShopList()
             });
+        }
+        async void OnListViewItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem != null)
+            {
+                await Navigation.PushAsync(new ListPage
+                {
+                    BindingContext = e.SelectedItem as ShopList
+                });
+            }
         }
     }
 }
